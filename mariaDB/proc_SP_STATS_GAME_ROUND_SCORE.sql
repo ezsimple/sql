@@ -1,0 +1,30 @@
+CREATE PROCEDURE  `SP_STATS_GAME_ROUND_SCORE`(
+IN $GM_CODE CHAR(13),
+IN $MM_CODE VARCHAR(10),
+IN $TOMT_RNDG CHAR(1)
+)
+BEGIN
+
+    SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+
+    SELECT CD_1P, CD_2P, CD_3P, CD_4P, CD_5P, CD_6P, CD_7P, CD_8P, CD_9P, CD_TOUT, CD_10P, CD_11P, CD_12P, CD_13P, CD_14P, CD_15P, CD_16P, CD_17P, CD_18P, CD_TIN,
+      H01, H02, H03, H04, H05, H06, H07, H08, H09, HOUT, H10, H11, H12, H13, H14, H15, H16, H17, H18, HIN,
+      P01, P02, P03, P04, P05, P06, P07, P08, P09, POUT, P10, P11, P12, P13, P14, P15, P16, P17, P18, PIN
+    FROM VW_STATS_SCORE_COMMON WHERE GM_CODE = $GM_CODE AND MAN_CD = $MM_CODE AND TOMT_RNDG = $TOMT_RNDG;
+
+END;
+
+
+
+CREATE VIEW  vw_stats_score_common AS select a.gm_code AS GM_CODE,b.TOMT_RNDG AS TOMT_RNDG,b.MAN_CD AS MAN_CD,
+c.cd_1p AS CD_1P,c.cd_2p AS CD_2P,c.cd_3p AS CD_3P,c.cd_4p AS CD_4P,c.cd_5p AS CD_5P,c.cd_6p AS CD_6P,c.cd_7p AS CD_7P,c.cd_8p AS CD_8P,c.cd_9p AS CD_9P,c.cd_tout AS CD_TOUT,c.cd_10p AS CD_10P,c.cd_11p AS CD_11P,c.cd_12p AS CD_12P,c.cd_13p AS CD_13P,c.cd_14p AS CD_14P,c.cd_15p AS CD_15P,c.cd_16p AS CD_16P,c.cd_17p AS CD_17P,c.cd_18p AS CD_18P,c.cd_tin AS CD_TIN,
+b.H01 AS H01,b.H02 AS H02,b.H03 AS H03,b.H04 AS H04,b.H05 AS H05,b.H06 AS H06,b.H07 AS H07,b.H08 AS H08,b.H09 AS H09,b.HOUT AS HOUT,b.H10 AS H10,b.H11 AS H11,b.H12 AS H12,b.H13 AS H13,b.H14 AS H14,b.H15 AS H15,b.H16 AS H16,b.H17 AS H17,b.H18 AS H18,b.HIN AS HIN,
+b.P01 AS P01,b.P02 AS P02,b.P03 AS P03,b.P04 AS P04,b.P05 AS P05,b.P06 AS P06,b.P07 AS P07,b.P08 AS P08,b.P09 AS P09,b.POUT AS POUT,b.P10 AS P10,b.P11 AS P11,b.P12 AS P12,b.P13 AS P13,b.P14 AS P14,b.P15 AS P15,b.P16 AS P16,b.P17 AS P17,b.P18 AS P18,b.PIN AS PIN,
+b.ACCU_TOTAL AS ACCU_TOTAL,b.ACCU_UNDER AS ACCU_UNDER,b.STD_HIT_NO AS STD_HIT_NO,
+e.mm_name_display AS MM_NAME_DISPLAY,concat(e.mm_mname,' ',e.mm_lname,' ',e.mm_fname) AS E_MM_NAME_DISPLAY
+from (((cg_game_mst a join cg_scor_mgt_mst b) join cg_cour_dtl c) join (cg_plyr_dtl d left join cs_memb_mst e on(d.MAN_CD = e.mm_code))) where a.gm_code = b.GAME_CODE and a.gm_gcode = c.cd_gcode and a.gm_ccode = c.cd_code and d.GAME_CODE = b.GAME_CODE and d.GIVE_UP_YN = '2' and d.MAN_CD = b.MAN_CD and b.RNDG_END = 'F';
+
+
+year:2016
+tour_code:11
+gm_code:2016110081000
